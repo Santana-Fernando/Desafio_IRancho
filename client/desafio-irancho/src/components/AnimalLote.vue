@@ -1,0 +1,239 @@
+<template>
+  <div id="app">
+    <b-navbar toggleable style="padding: 30px;" type="dark" variant="secondary">
+      <b-navbar-brand>
+        <h1>Cadastro De Animal-Lote</h1>
+      </b-navbar-brand>
+
+      <b-button
+        variant="outline-light"
+        @click="returnHome()"
+        style="width: 100px;"
+        id="pessoa"
+      >
+        Voltar
+        <b-icon icon="arrow-left" style="width: 60px; height: 30px;"></b-icon>
+      </b-button>
+    </b-navbar>
+    <br />
+    <br />
+    <section id="BodyAnimalLote">
+      <label>ID Animal:</label>
+      <b-form-input
+        v-model="animalLote.fk_id_animal"
+        :type="types[0]"
+      ></b-form-input>
+      <label>ID Lote:</label>
+      <b-form-input
+        v-model="animalLote.fk_id_lote"
+        :type="types[0]"
+      ></b-form-input>
+      <label>Data de Entrada:</label>
+      <b-form-input
+        v-model="animalLote.dt_entrada"
+        :type="types[1]"
+      ></b-form-input>
+      <label>Data de Saída:</label>
+      <b-form-input
+        v-model="animalLote.dt_saida"
+        :type="types[1]"
+      ></b-form-input>
+      <label>Data da Última Movimentação:</label>
+      <b-form-input
+        v-model="animalLote.dt_ultima_movimentacao"
+        :type="types[1]"
+      ></b-form-input>
+      <label>É Um Bezerro:</label>
+      <b-form-group>
+        <b-form-radio-group
+          v-model="animalLote.ic_bezerro"
+          :options="options"
+        ></b-form-radio-group>
+      </b-form-group>
+      <br />
+      <br />
+      <b-button
+        @click="addAnimalLote()"
+        variant="outline-light"
+        style="width: 100px;"
+        id="CadastroP"
+      >
+        Salvar
+        <b-icon
+          icon="file-earmark-plus"
+          style="width: 60px; height: 30px;"
+        ></b-icon>
+      </b-button>
+    </section>
+    <h1 style="text-align: center;">Lista de Cadastros</h1>
+    <section id="ListaAnimalLote">
+      <b-list-group>
+        <table id="tabelaAnimalLote">
+          <tr style="background-color: gray; color:white; ">
+            <td>Id</td>
+            <td>ID Animal</td>
+            <td>ID Lote</td>
+            <td>Data De Entrada</td>
+            <td>Data De Saída</td>
+            <td>Data De Última Movimentação</td>
+            <td>É um Bezerro</td>
+            <td>Ações</td>
+          </tr>
+          <tr
+            style="background-color: white;"
+            v-for="animalLote of animaisLote"
+            :key="animalLote.id"
+          >
+            <td>{{ animalLote.id }}</td>
+            <td>{{ animalLote.fk_id_animal }}</td>
+            <td>{{ animalLote.fk_id_lote }}</td>
+            <td>{{ animalLote.dt_entrada }}</td>
+            <td>{{ animalLote.dt_saida }}</td>
+            <td>{{ animalLote.dt_ultima_movimentacao }}</td>
+            <td>{{ animalLote.ic_bezerro ? "Sim" : "Não" }}</td>
+            <td>
+              <b-button
+                @click="DeletarAnimalLote(animalLote.id)"
+                variant="info"
+                style="width: 50px;"
+              >
+                <b-icon
+                  icon="trash"
+                  style="width: 25px; height: 30px;"
+                ></b-icon>
+              </b-button>
+              <b-button
+                @click="AtualizarAnimalLote(id, animalLote)"
+                variant="info"
+                style="width: 50px;"
+              >
+                <b-icon
+                  icon="arrow-clockwise"
+                  style="width: 25px; height: 30px;"
+                ></b-icon>
+              </b-button>
+            </td>
+          </tr>
+        </table>
+      </b-list-group>
+    </section>
+  </div>
+</template>
+
+<script>
+import AnimalLote from "../services/animalLote";
+import animalLote from "../services/animalLote";
+export default {
+  name: "app",
+  data() {
+    return {
+      animalLote: {
+        id: "",
+        fk_id_animal: "",
+        fk_id_lote: "",
+        dt_entrada: "",
+        dt_saida: "",
+        dt_ultima_movimentacao: "",
+        ic_bezerro: ""
+      },
+      animaisLote: [],
+      types: ["number", "date"],
+      options: [
+        { text: "Sim", value: true },
+        { text: "Não", value: false }
+      ]
+    };
+  },
+  methods: {
+    returnHome() {
+      this.$router.push({
+        path: "/"
+      });
+    },
+    listar() {
+      AnimalLote.listar().then(res => {
+        this.animaisLote = res.data;
+        this.animaisLote.forEach(animalLote => {
+          animalLote.dt_entrada = this.$moment(animalLote.dt_entrada).format(
+            "DD/MM/YYYY"
+          );
+          animalLote.dt_saida = this.$moment(animalLote.dt_saida).format(
+            "DD/MM/YYYY"
+          );
+          animalLote.dt_ultima_movimentacao = this.$moment(
+            animalLote.dt_ultima_movimentacao
+          ).format("DD/MM/YYYY");
+        });
+      });
+    },
+    addAnimalLote() {
+      if (!this.animalLote.id) {
+        AnimalLote.criar(this.animalLote)
+          .then(res => {
+            this.animalLote = {};
+            alert("Lote do Animal salvo com sucesso!!");
+            this.listar();
+          })
+          .catch(err => {
+            alert("Erro ao cadastrar Lote do anima!! " + err);
+          });
+      } else {
+        AnimalLote.atualizar(this.animalLote.id, this.animalLote)
+          .then(res => {
+            this.animalLote.id = {};
+            alert("Lote do animal Atualizado com sucesso!!");
+            this.listar();
+          })
+          .catch(err => {
+            alert("Erro ao Atualizar Lote do animal!! " + err);
+          });
+      }
+    },
+    DeletarAnimalLote(id) {
+      if (confirm("Deseja excluir o o uasuário")) {
+        AnimalLote.deletar(id)
+          .then(res => {
+            alert("Usuario apagado com sucesso!");
+            this.listar();
+          })
+          .catch(err => {
+            alert("Erro ao Apagar usuário!! " + err);
+          });
+      }
+    },
+    AtualizarAnimalLote(id, animalLote) {
+      this.animalLote = animalLote;
+    }
+  },
+  created() {
+    this.listar();
+  }
+};
+</script>
+
+<style lang="scss">
+#BodyAnimalLote {
+  padding: 50px 50px 50px 50px;
+  background-color: rgb(135, 136, 136);
+  margin: auto;
+  width: auto;
+  border-radius: 30px;
+}
+#ListaAnimalLote {
+  padding: 50px;
+  background-color: rgb(177, 177, 177);
+  margin: auto;
+  border-radius: 30px;
+  width: auto;
+}
+#tabelaAnimalLote {
+  border: 1px solid black;
+  border-spacing: 0px;
+  text-align: center;
+}
+td {
+  border: 1px solid black;
+  padding: 10px;
+  width: 1100px;
+}
+</style>

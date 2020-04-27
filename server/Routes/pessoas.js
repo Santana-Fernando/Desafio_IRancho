@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Pessoa = require("../model/pessoa");
+const Pessoa = require("../models/pessoa");
 
 router.get("/list", async (req, res) => {
   try {
@@ -44,23 +44,17 @@ router.post("/create", async (req, res) => {
 
 router.put("/put/:id", async (req, res) => {
   const { nome_pessoa, email, endereco, sexo, ic_ativo } = req.body;
-
+  let pessoa = {
+    nome_pessoa: nome_pessoa,
+    email: email,
+    endereco: endereco,
+    sexo: sexo,
+    ic_ativo: ic_ativo,
+  };
+  console.log(pessoa);
   try {
-    const AcharPessoa = await Pessoa.findOne({ where: { id: req.params.id } });
-    if (!AcharPessoa)
-      return res.status(400).send({ error: "Usuário não registrado!" });
-
-    await Pessoa.update(
-      {
-        nome_pessoa: nome_pessoa,
-        email: email,
-        endereco: endereco,
-        sexo: sexo,
-        ic_ativo: ic_ativo,
-      },
-      { where: { id: req.params.id } }
-    );
-
+    await Pessoa.update(pessoa, { where: { id: req.params.id } });
+    console.log();
     return res.send(req.body);
   } catch (err) {
     res.send("Erro ao atualizar usuário!" + err);
