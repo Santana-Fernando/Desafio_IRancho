@@ -5,12 +5,7 @@
         <h1>Cadastro De Animal-Lote</h1>
       </b-navbar-brand>
 
-      <b-button
-        variant="outline-light"
-        @click="returnHome()"
-        style="width: 100px;"
-        id="pessoa"
-      >
+      <b-button variant="outline-light" @click="returnHome()" style="width: 100px;" id="pessoa">
         Voltar
         <b-icon icon="arrow-left" style="width: 60px; height: 30px;"></b-icon>
       </b-button>
@@ -19,36 +14,30 @@
     <br />
     <section id="BodyAnimalLote">
       <label>ID Animal:</label>
-      <b-form-input
-        v-model="animalLote.fk_id_animal"
-        :type="types[0]"
-      ></b-form-input>
+      <b-form-select v-model="animalLote.fk_id_animal">
+        <b-form-select-option
+          :value="animal.id"
+          v-for="animal of animais"
+          :key="animal.id"
+        >{{ animal.no_animal }}</b-form-select-option>
+      </b-form-select>
       <label>ID Lote:</label>
-      <b-form-input
-        v-model="animalLote.fk_id_lote"
-        :type="types[0]"
-      ></b-form-input>
+      <b-form-select v-model="animalLote.fk_id_lote">
+        <b-form-select-option
+          :value="lote.id"
+          v-for="lote of lotes"
+          :key="lote.id"
+        >{{ lote.ds_lote }}</b-form-select-option>
+      </b-form-select>
       <label>Data de Entrada:</label>
-      <b-form-input
-        v-model="animalLote.dt_entrada"
-        :type="types[1]"
-      ></b-form-input>
+      <b-form-input v-model="animalLote.dt_entrada" :type="types[1]"></b-form-input>
       <label>Data de Saída:</label>
-      <b-form-input
-        v-model="animalLote.dt_saida"
-        :type="types[1]"
-      ></b-form-input>
+      <b-form-input v-model="animalLote.dt_saida" :type="types[1]"></b-form-input>
       <label>Data da Última Movimentação:</label>
-      <b-form-input
-        v-model="animalLote.dt_ultima_movimentacao"
-        :type="types[1]"
-      ></b-form-input>
+      <b-form-input v-model="animalLote.dt_ultima_movimentacao" :type="types[1]"></b-form-input>
       <label>É Um Bezerro:</label>
       <b-form-group>
-        <b-form-radio-group
-          v-model="animalLote.ic_bezerro"
-          :options="options"
-        ></b-form-radio-group>
+        <b-form-radio-group v-model="animalLote.ic_bezerro" :options="options"></b-form-radio-group>
       </b-form-group>
       <br />
       <br />
@@ -59,10 +48,7 @@
         id="CadastroP"
       >
         Salvar
-        <b-icon
-          icon="file-earmark-plus"
-          style="width: 60px; height: 30px;"
-        ></b-icon>
+        <b-icon icon="file-earmark-plus" style="width: 60px; height: 30px;"></b-icon>
       </b-button>
     </section>
     <h1 style="text-align: center;">Lista de Cadastros</h1>
@@ -97,20 +83,14 @@
                 variant="info"
                 style="width: 50px;"
               >
-                <b-icon
-                  icon="trash"
-                  style="width: 25px; height: 30px;"
-                ></b-icon>
+                <b-icon icon="trash" style="width: 25px; height: 30px;"></b-icon>
               </b-button>
               <b-button
-                @click="AtualizarAnimalLote(id, animalLote)"
+                @click="AtualizarAnimalLote(animalLote.id, animalLote)"
                 variant="info"
                 style="width: 50px;"
               >
-                <b-icon
-                  icon="arrow-clockwise"
-                  style="width: 25px; height: 30px;"
-                ></b-icon>
+                <b-icon icon="arrow-clockwise" style="width: 25px; height: 30px;"></b-icon>
               </b-button>
             </td>
           </tr>
@@ -122,7 +102,8 @@
 
 <script>
 import AnimalLote from "../services/animalLote";
-import animalLote from "../services/animalLote";
+import Lote from "../services/lote";
+import Animal from "../services/animal";
 export default {
   name: "app",
   data() {
@@ -136,6 +117,18 @@ export default {
         dt_ultima_movimentacao: "",
         ic_bezerro: ""
       },
+      animal: {
+        id: "",
+        no_animal: "",
+        no_raca: ""
+      },
+      lote: {
+        id: "",
+        no_lote: "",
+        ds_lote: ""
+      },
+      animais: [],
+      lotes: [],
       animaisLote: [],
       types: ["number", "date"],
       options: [
@@ -150,20 +143,19 @@ export default {
         path: "/"
       });
     },
+    listarAnimal() {
+      Animal.listar().then(res => {
+        this.animais = res.data;
+      });
+    },
+    listarLote() {
+      Lote.listar().then(res => {
+        this.lotes = res.data;
+      });
+    },
     listar() {
       AnimalLote.listar().then(res => {
         this.animaisLote = res.data;
-        this.animaisLote.forEach(animalLote => {
-          animalLote.dt_entrada = this.$moment(animalLote.dt_entrada).format(
-            "DD/MM/YYYY"
-          );
-          animalLote.dt_saida = this.$moment(animalLote.dt_saida).format(
-            "DD/MM/YYYY"
-          );
-          animalLote.dt_ultima_movimentacao = this.$moment(
-            animalLote.dt_ultima_movimentacao
-          ).format("DD/MM/YYYY");
-        });
       });
     },
     addAnimalLote() {
@@ -180,7 +172,7 @@ export default {
       } else {
         AnimalLote.atualizar(this.animalLote.id, this.animalLote)
           .then(res => {
-            this.animalLote.id = {};
+            this.animalLote = {};
             alert("Lote do animal Atualizado com sucesso!!");
             this.listar();
           })
@@ -202,11 +194,13 @@ export default {
       }
     },
     AtualizarAnimalLote(id, animalLote) {
-      this.animalLote = animalLote;
+      this.animalLote = JSON.parse(JSON.stringify(animalLote));
     }
   },
   created() {
     this.listar();
+    this.listarAnimal();
+    this.listarLote();
   }
 };
 </script>

@@ -5,12 +5,7 @@
         <h1>Cadastro De Animal</h1>
       </b-navbar-brand>
 
-      <b-button
-        variant="outline-light"
-        @click="returnHome()"
-        style="width: 100px;"
-        id="pessoa"
-      >
+      <b-button variant="outline-light" @click="returnHome()" style="width: 100px;" id="pessoa">
         Voltar
         <b-icon icon="arrow-left" style="width: 60px; height: 30px;"></b-icon>
       </b-button>
@@ -24,27 +19,17 @@
           :value="pessoa.id"
           v-for="pessoa of pessoas"
           :key="pessoa.id"
-          >{{ pessoa.nome_pessoa }}
-        </b-form-select-option>
+        >{{ pessoa.nome_pessoa }}</b-form-select-option>
       </b-form-select>
       <label>ID Fazenda:</label>
       <b-form-input v-model="animal.id_fazenda"></b-form-input>
       <label>Nome Do Animal:</label>
-      <b-form-input
-        v-model="animal.no_animal"
-        placeholder="Digite o nome do animal..."
-      ></b-form-input>
+      <b-form-input v-model="animal.no_animal" placeholder="Digite o nome do animal..."></b-form-input>
       <label>Raça:</label>
-      <b-form-input
-        v-model="animal.no_raca"
-        placeholder="Digite a raçado animal..."
-      ></b-form-input>
+      <b-form-input v-model="animal.no_raca" placeholder="Digite a raçado animal..."></b-form-input>
       <label>Sexo:</label>
       <b-form-group>
-        <b-form-radio-group
-          v-model="animal.sexo"
-          :options="OPsexo"
-        ></b-form-radio-group>
+        <b-form-radio-group v-model="animal.sexo" :options="OPsexo"></b-form-radio-group>
       </b-form-group>
       <label>Peso:</label>
       <b-form-input v-model="animal.vr_peso" :type="types[1]"></b-form-input>
@@ -56,17 +41,9 @@
       ></b-form-input>
       <br />
       <br />
-      <b-button
-        @click="addAnimal()"
-        variant="outline-light"
-        style="width: 100px;"
-        id="CadastroP"
-      >
+      <b-button @click="addAnimal()" variant="outline-light" style="width: 100px;" id="CadastroP">
         Salvar
-        <b-icon
-          icon="file-earmark-plus"
-          style="width: 60px; height: 30px;"
-        ></b-icon>
+        <b-icon icon="file-earmark-plus" style="width: 60px; height: 30px;"></b-icon>
       </b-button>
     </section>
     <br />
@@ -86,11 +63,7 @@
             <td>Data de Nascimento</td>
             <td>Ações</td>
           </tr>
-          <tr
-            style="background-color: white;"
-            v-for="animal in animais"
-            :key="animal.id"
-          >
+          <tr style="background-color: white;" v-for="animal in animais" :key="animal.id">
             <td>{{ animal.id }}</td>
             <td>{{ animal.fk_id_pessoa }}</td>
             <td>{{ animal.id_fazenda }}</td>
@@ -105,21 +78,11 @@
                 variant="info"
                 style="width: 50px;"
               >
-                <b-icon
-                  icon="arrow-clockwise"
-                  style="width: 25px; height: 30px;"
-                ></b-icon>
+                <b-icon icon="arrow-clockwise" style="width: 25px; height: 30px;"></b-icon>
               </b-button>
 
-              <b-button
-                @click="DeletarAnimal(animal.id)"
-                variant="info"
-                style="width: 50px;"
-              >
-                <b-icon
-                  icon="trash"
-                  style="width: 25px; height: 30px;"
-                ></b-icon>
+              <b-button @click="DeletarAnimal(animal.id)" variant="info" style="width: 50px;">
+                <b-icon icon="trash" style="width: 25px; height: 30px;"></b-icon>
               </b-button>
             </td>
           </tr>
@@ -173,12 +136,13 @@ export default {
     },
     listar() {
       Animal.listar().then(res => {
+        this.animais = [];
         this.animais = res.data;
-        this.animais.forEach(animal => {
-          animal.dt_nascimento = this.$moment(animal.dt_nascimento).format(
-            "DD/MM/YYYY"
-          );
-        });
+        /*this.animais.forEach(animal => {
+          animal.dt_nascimento = this.$moment(animal.dt_nascimento)
+            .locale("pt-BR")
+            .format("L");
+        });*/
       });
     },
     addAnimal() {
@@ -217,7 +181,7 @@ export default {
       }
     },
     AtualizaAnimal(id, animal) {
-      this.animal = animal;
+      this.animal = JSON.parse(JSON.stringify(animal));
     }
   },
   created() {

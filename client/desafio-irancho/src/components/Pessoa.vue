@@ -5,11 +5,7 @@
         <h1>Cadastro De Pessoa</h1>
       </b-navbar-brand>
 
-      <b-button
-        variant="outline-light"
-        @click="returnHome()"
-        style="width: 100px;"
-      >
+      <b-button variant="outline-light" @click="returnHome()" style="width: 100px;">
         Voltar
         <b-icon icon="arrow-left" style="width: 60px; height: 30px;"></b-icon>
       </b-button>
@@ -19,10 +15,7 @@
     <br />
     <section id="BodyPessoa">
       <label>Nome:</label>
-      <b-form-input
-        v-model="pessoa.nome_pessoa"
-        placeholder="Digite o seu nome completo..."
-      ></b-form-input>
+      <b-form-input v-model="pessoa.nome_pessoa" placeholder="Digite o seu nome completo..."></b-form-input>
 
       <label>E-mail:</label>
       <b-form-input
@@ -32,40 +25,21 @@
       ></b-form-input>
 
       <label>Endereço:</label>
-      <b-form-input
-        v-model="pessoa.endereco"
-        placeholder="Digite o seu endereço..."
-      ></b-form-input>
+      <b-form-input v-model="pessoa.endereco" placeholder="Digite o seu endereço..."></b-form-input>
 
       <label>Sexo:</label>
       <b-form-group>
-        <b-form-radio-group
-          v-model="pessoa.sexo"
-          :options="options"
-          name="SexoPessoa"
-        ></b-form-radio-group>
+        <b-form-radio-group v-model="pessoa.sexo" :options="options" name="SexoPessoa"></b-form-radio-group>
       </b-form-group>
 
       <label>Está Ativo:</label>
       <b-form-group>
-        <b-form-radio-group
-          v-model="pessoa.ic_ativo"
-          :options="OPativo"
-          name="radio-inline"
-        ></b-form-radio-group>
+        <b-form-radio-group v-model="pessoa.ic_ativo" :options="OPativo" name="radio-inline"></b-form-radio-group>
       </b-form-group>
 
-      <b-button
-        @click="addPessoa()"
-        variant="outline-light"
-        style="width: 100px;"
-        id="CadastroP"
-      >
+      <b-button @click="addPessoa()" variant="outline-light" style="width: 100px;" id="CadastroP">
         Salvar
-        <b-icon
-          icon="file-earmark-plus"
-          style="width: 60px; height: 30px;"
-        ></b-icon>
+        <b-icon icon="file-earmark-plus" style="width: 60px; height: 30px;"></b-icon>
       </b-button>
     </section>
 
@@ -87,11 +61,7 @@
             <td>Está Ativo:</td>
             <td>Ações</td>
           </tr>
-          <tr
-            style="background-color: white;"
-            v-for="pessoa in pessoas"
-            :key="pessoa.id"
-          >
+          <tr style="background-color: white;" v-for="pessoa in pessoas" :key="pessoa.id">
             <td>{{ pessoa.id }}</td>
             <td>{{ pessoa.nome_pessoa }}</td>
             <td>{{ pessoa.email }}</td>
@@ -99,26 +69,12 @@
             <td>{{ pessoa.sexo }}</td>
             <td>{{ pessoa.ic_ativo ? "Sim" : "Não" }}</td>
             <td>
-              <b-button
-                @click="AtualizaPessoa(id, pessoa)"
-                variant="info"
-                style="width: 50px;"
-              >
-                <b-icon
-                  icon="arrow-clockwise"
-                  style="width: 25px; height: 30px;"
-                ></b-icon>
+              <b-button @click="AtualizaPessoa(id, pessoa)" variant="info" style="width: 50px;">
+                <b-icon icon="arrow-clockwise" style="width: 25px; height: 30px;"></b-icon>
               </b-button>
 
-              <b-button
-                @click="DeletarPessoa(pessoa.id)"
-                variant="info"
-                style="width: 50px;"
-              >
-                <b-icon
-                  icon="trash"
-                  style="width: 25px; height: 30px;"
-                ></b-icon>
+              <b-button @click="DeletarPessoa(pessoa.id)" variant="info" style="width: 50px;">
+                <b-icon icon="trash" style="width: 25px; height: 30px;"></b-icon>
               </b-button>
             </td>
           </tr>
@@ -202,7 +158,7 @@ export default {
       }
     },
     AtualizaPessoa(id, pessoa) {
-      this.pessoa = pessoa;
+      this.pessoa = JSON.parse(JSON.stringify(pessoa));
     }
   },
   created() {

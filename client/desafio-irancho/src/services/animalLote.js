@@ -10,7 +10,7 @@ export default {
   },
 
   atualizar: (id, animalLote) => {
-    return http.put(`animal_lote/put/${id}`, animalLote);
+    return http.put(`animal_lote/put/${id}`, { animalLote });
   },
 
   deletar: id => {

@@ -58,7 +58,7 @@ router.put("/put/:id", async (req, res) => {
     dt_saida,
     dt_ultima_movimentacao,
     ic_bezerro,
-  } = req.body;
+  } = req.body.animalLote;
 
   try {
     const AcharAnimalLote = await AnimalLote.findOne({
@@ -67,19 +67,19 @@ router.put("/put/:id", async (req, res) => {
     if (!AcharAnimalLote)
       return res.status(400).send({ error: "Animal não registrado!" });
 
-    await AnimalLote.update(
+    const animalLote = await AnimalLote.update(
       {
-        fk_id_animal: fk_id_animal,
-        fk_id_lote: fk_id_lote,
-        dt_entrada: dt_entrada,
-        dt_saida: dt_saida,
-        dt_ultima_movimentacao: dt_ultima_movimentacao,
-        ic_bezerro: ic_bezerro,
+        fk_id_animal,
+        fk_id_lote,
+        dt_entrada,
+        dt_saida,
+        dt_ultima_movimentacao,
+        ic_bezerro,
       },
       { where: { id: req.params.id } }
     );
 
-    return res.send(req.body);
+    return res.send(animalLote);
   } catch (err) {
     res.send("Erro ao atualizar Animal!" + err);
   }

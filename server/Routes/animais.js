@@ -60,26 +60,25 @@ router.put("/put/:id", async (req, res) => {
     sexo,
     vr_peso,
     dt_nascimento,
-  } = req.body;
+  } = req.body.animal;
 
   try {
     const AcharAnimal = await Animal.findOne({ where: { id: req.params.id } });
     if (!AcharAnimal)
       return res.status(400).send({ error: "Animal não registrado!" });
-
-    await Animal.update(
+    const animal = await Animal.update(
       {
-        fk_id_pessoa: fk_id_pessoa,
-        id_fazenda: id_fazenda,
-        no_animal: no_animal,
-        no_raca: no_raca,
-        sexo: sexo,
-        vr_peso: vr_peso,
-        dt_nascimento: dt_nascimento,
+        fk_id_pessoa,
+        id_fazenda,
+        no_animal,
+        no_raca,
+        sexo,
+        vr_peso,
+        dt_nascimento,
       },
       { where: { id: req.params.id } }
     );
-    return res.send(req.body);
+    return res.send(animal);
   } catch (err) {
     res.send("Erro ao atualizar Animal!" + err);
   }
