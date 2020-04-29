@@ -138,11 +138,9 @@ export default {
       Animal.listar().then(res => {
         this.animais = [];
         this.animais = res.data;
-        /*this.animais.forEach(animal => {
-          animal.dt_nascimento = this.$moment(animal.dt_nascimento)
-            .locale("pt-BR")
-            .format("L");
-        });*/
+        this.animais.forEach(animal => {
+          animal.dt_nascimento = this.$moment(animal.dt_nascimento).format("L");
+        });
       });
     },
     addAnimal() {
