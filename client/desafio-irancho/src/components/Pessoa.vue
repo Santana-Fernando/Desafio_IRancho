@@ -186,7 +186,7 @@ export default {
       }
     },
     DeletarPessoa(id) {
-      if (confirm("Deseja excluir o o uasuário")) {
+      if (confirm("Deseja excluir o o usuário?")) {
         Pessoa.deletar(id)
           .then(res => {
             alert("Usuario apagado com sucesso!");

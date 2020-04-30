@@ -225,10 +225,10 @@ export default {
       }
     },
     DeletarAnimalLote(id) {
-      if (confirm("Deseja excluir o o uasuário")) {
+      if (confirm("Deseja excluir o registro de lote?")) {
         AnimalLote.deletar(id)
           .then(res => {
-            alert("Usuario apagado com sucesso!");
+            alert("Lote do apagado com sucesso!");
             this.listar();
           })
           .catch(err => {

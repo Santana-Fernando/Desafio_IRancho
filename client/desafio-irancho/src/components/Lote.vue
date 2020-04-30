@@ -137,10 +137,10 @@ export default {
       this.lote = JSON.parse(JSON.stringify(lote));
     },
     DeletarLote(id) {
-      if (confirm("Deseja excluir o Lote")) {
+      if (confirm("Deseja excluir o Lote?")) {
         Lote.deletar(id)
           .then(res => {
-            alert("Usuario apagado com sucesso!");
+            alert("Lote apagado com sucesso!");
             this.listar();
           })
           .catch(err => {
