@@ -5,12 +5,7 @@
         <h1>Cadastro De Lote</h1>
       </b-navbar-brand>
 
-      <b-button
-        variant="outline-light"
-        @click="returnHome()"
-        style="width: 100px;"
-        id="pessoa"
-      >
+      <b-button variant="outline-light" @click="returnHome()" style="width: 100px;" id="pessoa">
         Voltar
         <b-icon icon="arrow-left" style="width: 60px; height: 30px;"></b-icon>
       </b-button>
@@ -33,17 +28,9 @@
       ></b-form-textarea>
       <br />
       <br />
-      <b-button
-        @click="addLote()"
-        variant="outline-light"
-        style="width: 100px;"
-        id="CadastroP"
-      >
+      <b-button @click="addLote()" variant="outline-light" style="width: 100px;" id="CadastroP">
         Salvar
-        <b-icon
-          icon="file-earmark-plus"
-          style="width: 60px; height: 30px;"
-        ></b-icon>
+        <b-icon icon="file-earmark-plus" style="width: 60px; height: 30px;"></b-icon>
       </b-button>
     </section>
     <br />
@@ -60,35 +47,27 @@
             <td>Descríção</td>
             <td>Ações</td>
           </tr>
-          <tr
-            style="background-color: white;"
-            v-for="lote of lotes"
-            :key="lote.id"
-          >
+          <tr style="background-color: white;" v-for="lote of lotes" :key="lote.id">
             <td>{{ lote.id }}</td>
             <td>{{ lote.no_lote }}</td>
             <td>{{ lote.ds_lote }}</td>
             <td>
               <b-button
-                @click="DeletarLote(lote.id)"
-                variant="info"
-                style="width: 50px;"
-              >
-                <b-icon
-                  icon="trash"
-                  style="width: 25px; height: 30px;"
-                ></b-icon>
-              </b-button>
-
-              <b-button
+                title="Atualizar"
                 @click="AtualizaLote(id, lote)"
                 variant="info"
                 style="width: 50px;"
               >
-                <b-icon
-                  icon="arrow-clockwise"
-                  style="width: 25px; height: 30px;"
-                ></b-icon>
+                <b-icon icon="arrow-clockwise" style="width: 25px; height: 30px;"></b-icon>
+              </b-button>
+
+              <b-button
+                title="Excluir"
+                @click="DeletarLote(lote.id)"
+                variant="info"
+                style="width: 50px;"
+              >
+                <b-icon icon="trash" style="width: 25px; height: 30px;"></b-icon>
               </b-button>
             </td>
           </tr>
@@ -125,29 +104,37 @@ export default {
     },
     addLote() {
       if (!this.lote.id) {
-        Lote.criar(this.lote)
-          .then(res => {
-            this.lote = {};
-            alert("Lote salvo com sucesso!!");
-            this.listar();
-          })
-          .catch(err => {
-            alert("Erro ao cadastrar Lote!! " + err);
-          });
+        if (this.lote.no_lote == "" || this.lote.ds_lote == "") {
+          alert("Algum campo está nulo ou com valor inválido!!");
+        } else {
+          Lote.criar(this.lote)
+            .then(res => {
+              this.lote = {};
+              alert("Lote salvo com sucesso!!");
+              this.listar();
+            })
+            .catch(err => {
+              alert("Erro ao cadastrar Lote!! " + err);
+            });
+        }
       } else {
-        Lote.atualizar(this.lote.id, this.lote)
-          .then(res => {
-            this.lote = {};
-            alert("Lote Atualizado com sucesso!!");
-            this.listar();
-          })
-          .catch(err => {
-            alert("Erro ao Atualizar Lote!! " + err);
-          });
+        if (this.lote.no_lote == "" || this.lote.ds_lote == "") {
+          alert("Algum campo está nulo ou com valor inválido!!");
+        } else {
+          Lote.atualizar(this.lote.id, this.lote)
+            .then(res => {
+              this.lote = {};
+              alert("Lote Atualizado com sucesso!!");
+              this.listar();
+            })
+            .catch(err => {
+              alert("Erro ao Atualizar Lote!! " + err);
+            });
+        }
       }
     },
     AtualizaLote(id, lote) {
-      this.lote = lote;
+      this.lote = JSON.parse(JSON.stringify(lote));
     },
     DeletarLote(id) {
       if (confirm("Deseja excluir o Lote")) {

@@ -69,11 +69,21 @@
             <td>{{ pessoa.sexo }}</td>
             <td>{{ pessoa.ic_ativo ? "Sim" : "Não" }}</td>
             <td>
-              <b-button @click="AtualizaPessoa(id, pessoa)" variant="info" style="width: 50px;">
+              <b-button
+                title="Atualizar"
+                @click="AtualizaPessoa(id, pessoa)"
+                variant="info"
+                style="width: 50px;"
+              >
                 <b-icon icon="arrow-clockwise" style="width: 25px; height: 30px;"></b-icon>
               </b-button>
 
-              <b-button @click="DeletarPessoa(pessoa.id)" variant="info" style="width: 50px;">
+              <b-button
+                title="Excluir"
+                @click="DeletarPessoa(pessoa.id)"
+                variant="info"
+                style="width: 50px;"
+              >
                 <b-icon icon="trash" style="width: 25px; height: 30px;"></b-icon>
               </b-button>
             </td>
@@ -124,25 +134,55 @@ export default {
     },
     addPessoa() {
       if (!this.pessoa.id) {
-        Pessoa.criar(this.pessoa)
-          .then(res => {
-            this.pessoa = {};
-            alert("Usuário salvo com sucesso!!");
-            this.listar();
-          })
-          .catch(err => {
-            alert("Erro ao cadastrar usuário!! " + err);
-          });
+        if (
+          this.pessoa.nome_pessoa === "" ||
+          this.pessoa.email === "" ||
+          this.pessoa.endereco === "" ||
+          this.pessoa.sexo === "" ||
+          this.pessoa.ic_ativo === ""
+        ) {
+          alert("Nenhum campo pode ser nulo!!");
+        } else {
+          Pessoa.criar(this.pessoa)
+            .then(res => {
+              this.pessoa = {};
+              alert("Usuário salvo com sucesso!!");
+              this.listar();
+            })
+            .catch(err => {
+              alert("Erro ao cadastrar usuário!! " + err);
+            });
+        }
       } else {
-        Pessoa.atualizar(this.pessoa.id, this.pessoa)
-          .then(res => {
-            this.pessoa = {};
-            alert("Usuário Atualizado com sucesso!!");
-            this.listar();
-          })
-          .catch(err => {
-            alert("Erro ao Atualizar usuário!! " + err);
-          });
+        if (
+          this.pessoa.nome_pessoa === "" ||
+          this.pessoa.email === "" ||
+          this.pessoa.endereco === "" ||
+          this.pessoa.sexo === "" ||
+          this.pessoa.ic_ativo === ""
+        ) {
+          alert("Algum campo está nulo ou com valor inválido!!");
+        } else {
+          if (
+            this.pessoa.nome_pessoa === "" ||
+            this.pessoa.email === "" ||
+            this.pessoa.endereco === "" ||
+            this.pessoa.sexo === "" ||
+            this.pessoa.ic_ativo === ""
+          ) {
+            alert("Algum campo está nulo ou com valor inválido!!");
+          } else {
+            Pessoa.atualizar(this.pessoa.id, this.pessoa)
+              .then(res => {
+                this.pessoa = {};
+                alert("Usuário Atualizado com sucesso!!");
+                this.listar();
+              })
+              .catch(err => {
+                alert("Erro ao Atualizar usuário!! " + err);
+              });
+          }
+        }
       }
     },
     DeletarPessoa(id) {

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const AnimalLote = require("../models/animalLote");
 
-router.get("/list", async (req, res) => {
+const listar = async (req, res) => {
   try {
     const animalLote = await AnimalLote.findAll();
     return res.send(animalLote);
@@ -11,20 +11,9 @@ router.get("/list", async (req, res) => {
       .status(500)
       .send({ error: "Erro na consulta de usuários" + err });
   }
-});
+};
 
-router.get("/query/:id", async (req, res) => {
-  try {
-    const animalLote = await AnimalLote.findOne({
-      where: { id: req.params.id },
-    });
-    res.send(animalLote);
-  } catch (err) {
-    return res.status(500).send({ error: "Erro na consulta de animal" + err });
-  }
-});
-
-router.post("/create", async (req, res) => {
+const criar = async (req, res) => {
   try {
     const {
       fk_id_animal,
@@ -48,9 +37,9 @@ router.post("/create", async (req, res) => {
   } catch (err) {
     return res.status(500).send({ error: "Erro ao cadatrar animal " + err });
   }
-});
+};
 
-router.put("/put/:id", async (req, res) => {
+const atualizar = async (req, res) => {
   const {
     fk_id_animal,
     fk_id_lote,
@@ -83,15 +72,15 @@ router.put("/put/:id", async (req, res) => {
   } catch (err) {
     res.send("Erro ao atualizar Animal!" + err);
   }
-});
+};
 
-router.delete("/delete/:id", async (req, res) => {
+const deletar = async (req, res) => {
   try {
     await AnimalLote.destroy({ where: { id: req.params.id } });
     res.send(`Foi deletado com sucesso!`);
   } catch (err) {
     res.send("Erro ao deletar animal " + err);
   }
-});
+};
 
-module.exports = router;
+module.exports = { listar, criar, atualizar, deletar };

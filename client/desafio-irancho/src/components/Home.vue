@@ -84,11 +84,8 @@ export default {
 
 <style lang="scss">
 #corpo {
-  padding: 160px;
-  margin: auto;
-}
-b-button {
-  width: 400px;
+  margin: 105px;
+  width: auto;
 }
 </style>
 

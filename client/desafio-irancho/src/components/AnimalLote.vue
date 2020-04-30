@@ -73,24 +73,27 @@
             <td>{{ animalLote.id }}</td>
             <td>{{ animalLote.fk_id_animal }}</td>
             <td>{{ animalLote.fk_id_lote }}</td>
-            <td>{{ animalLote.dt_entrada }}</td>
-            <td>{{ animalLote.dt_saida }}</td>
-            <td>{{ animalLote.dt_ultima_movimentacao }}</td>
+            <td>{{ formatarDataEntrada(dt_entrada, animalLote) }}</td>
+            <td>{{ formatarDataSaida(animalLote.dt_saida, animalLote) }}</td>
+            <td>{{ formatarDataNascimento(animalLote.dt_ultima_movimentacao, animalLote) }}</td>
             <td>{{ animalLote.ic_bezerro ? "Sim" : "Não" }}</td>
             <td>
               <b-button
-                @click="DeletarAnimalLote(animalLote.id)"
-                variant="info"
-                style="width: 50px;"
-              >
-                <b-icon icon="trash" style="width: 25px; height: 30px;"></b-icon>
-              </b-button>
-              <b-button
+                title="Atulizar"
                 @click="AtualizarAnimalLote(animalLote.id, animalLote)"
                 variant="info"
                 style="width: 50px;"
               >
                 <b-icon icon="arrow-clockwise" style="width: 25px; height: 30px;"></b-icon>
+              </b-button>
+
+              <b-button
+                title="Excluir"
+                @click="DeletarAnimalLote(animalLote.id)"
+                variant="info"
+                style="width: 50px;"
+              >
+                <b-icon icon="trash" style="width: 25px; height: 30px;"></b-icon>
               </b-button>
             </td>
           </tr>
@@ -158,27 +161,67 @@ export default {
         this.animaisLote = res.data;
       });
     },
+    formatarDataEntrada(dt_entrada, animalLote) {
+      let data;
+      return (this.data = this.$moment(animalLote.dt_entrada)
+        .add(1, "days")
+        .format("DD/MM/YYYY"));
+    },
+    formatarDataSaida(dt_saida, animalLote) {
+      let data;
+      return (this.data = this.$moment(animalLote.dt_saida)
+        .add(1, "days")
+        .format("DD/MM/YYYY"));
+    },
+    formatarDataNascimento(dt_ultima_movimentacao, animalLote) {
+      let data;
+      return (this.data = this.$moment(animalLote.dt_ultima_movimentacao)
+        .add(1, "days")
+        .format("DD/MM/YYYY"));
+    },
     addAnimalLote() {
       if (!this.animalLote.id) {
-        AnimalLote.criar(this.animalLote)
-          .then(res => {
-            this.animalLote = {};
-            alert("Lote do Animal salvo com sucesso!!");
-            this.listar();
-          })
-          .catch(err => {
-            alert("Erro ao cadastrar Lote do anima!! " + err);
-          });
+        if (
+          this.animalLote.fk_id_animal == "" ||
+          this.animalLote.fk_id_lote == " " ||
+          this.animalLote.dt_entrada == "" ||
+          this.animalLote.dt_saida == " " ||
+          this.animalLote.dt_ultima_movimentacao == " " ||
+          this.animalLote.ic_bezerro == " "
+        ) {
+          alert("Algum campo está nulo ou com valor inválido!!");
+        } else {
+          AnimalLote.criar(this.animalLote)
+            .then(res => {
+              this.animalLote = {};
+              alert("Lote do Animal salvo com sucesso!!");
+              this.listar();
+            })
+            .catch(err => {
+              alert("Erro ao cadastrar Lote do anima!! " + err);
+            });
+        }
       } else {
-        AnimalLote.atualizar(this.animalLote.id, this.animalLote)
-          .then(res => {
-            this.animalLote = {};
-            alert("Lote do animal Atualizado com sucesso!!");
-            this.listar();
-          })
-          .catch(err => {
-            alert("Erro ao Atualizar Lote do animal!! " + err);
-          });
+        if (
+          this.animalLote.fk_id_animal == "" ||
+          this.animalLote.fk_id_lote == " " ||
+          this.animalLote.dt_entrada == "" ||
+          this.animalLote.dt_saida == " " ||
+          this.animalLote.dt_ultima_movimentacao == " " ||
+          this.animalLote.ic_bezerro == " "
+        ) {
+          alert("Algum campo está nulo ou com valor inválido!!");
+        } else {
+          AnimalLote.atualizar(this.animalLote.id, this.animalLote)
+            .then(res => {
+              this.animalLote = {};
+              alert("Lote do animal Atualizado com sucesso!!");
+              this.listar();
+            })
+            .catch(err => {
+              alert("Erro ao Atualizar Lote do animal!! " + err);
+            });
+        }
       }
     },
     DeletarAnimalLote(id) {

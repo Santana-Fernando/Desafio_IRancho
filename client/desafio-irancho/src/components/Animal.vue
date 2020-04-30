@@ -71,9 +71,10 @@
             <td>{{ animal.no_raca }}</td>
             <td>{{ animal.sexo }}</td>
             <td>{{ animal.vr_peso }}</td>
-            <td>{{ animal.dt_nascimento }}</td>
+            <td>{{ formatarData(animal.dt_nascimento, animal) }}</td>
             <td>
               <b-button
+                title="Atualizar"
                 @click="AtualizaAnimal(animal.id, animal)"
                 variant="info"
                 style="width: 50px;"
@@ -81,7 +82,12 @@
                 <b-icon icon="arrow-clockwise" style="width: 25px; height: 30px;"></b-icon>
               </b-button>
 
-              <b-button @click="DeletarAnimal(animal.id)" variant="info" style="width: 50px;">
+              <b-button
+                title="Excluir"
+                @click="DeletarAnimal(animal.id)"
+                variant="info"
+                style="width: 50px;"
+              >
                 <b-icon icon="trash" style="width: 25px; height: 30px;"></b-icon>
               </b-button>
             </td>
@@ -138,32 +144,61 @@ export default {
       Animal.listar().then(res => {
         this.animais = [];
         this.animais = res.data;
-        this.animais.forEach(animal => {
-          animal.dt_nascimento = this.$moment(animal.dt_nascimento).format("L");
-        });
       });
+    },
+    formatarData(dt_nascimenton, animal) {
+      let data;
+      return (this.data = this.$moment(animal.dt_nascimento)
+        .add(1, "days")
+        .format("DD/MM/YYYY"));
     },
     addAnimal() {
       if (!this.animal.id) {
-        Animal.criar(this.animal)
-          .then(res => {
-            this.animal = {};
-            alert("Animal salvo com sucesso!!");
-            this.listar();
-          })
-          .catch(err => {
-            alert("Erro ao cadastrar animal!! " + err);
-          });
+        if (
+          this.animal.fk_id_pessoa === "" ||
+          this.animal.id_fazenda === "" ||
+          this.animal.no_animal === "" ||
+          this.animal.no_raca === "" ||
+          this.animal.sexo === "" ||
+          this.animal.vr_peso < 0 ||
+          this.animal.vr_peso === "" ||
+          this.animal.dt_nascimento === ""
+        ) {
+          alert("Algum campo está nulo ou com valor inválido!!");
+        } else {
+          Animal.criar(this.animal)
+            .then(res => {
+              this.animal = {};
+              alert("Animal salvo com sucesso!!");
+              this.listar();
+            })
+            .catch(err => {
+              alert("Erro ao cadastrar animal!! " + err);
+            });
+        }
       } else {
-        Animal.atualizar(this.animal.id, this.animal)
-          .then(res => {
-            this.animal = {};
-            alert("Animal Atualizado com sucesso!!");
-            this.listar();
-          })
-          .catch(err => {
-            alert("Erro ao Atualizar animal!! " + err);
-          });
+        if (
+          this.animal.fk_id_pessoa === "" ||
+          this.animal.id_fazenda === "" ||
+          this.animal.no_animal === "" ||
+          this.animal.no_raca === "" ||
+          this.animal.sexo === "" ||
+          this.animal.vr_peso < 0 ||
+          this.animal.vr_peso === "" ||
+          this.animal.dt_nascimento === ""
+        ) {
+          alert("Algum campo está nulo ou com valor inválido!!");
+        } else {
+          Animal.criar(this.animal)
+            .then(res => {
+              this.animal = {};
+              alert("Animal salvo com sucesso!!");
+              this.listar();
+            })
+            .catch(err => {
+              alert("Erro ao cadastrar animal!! " + err);
+            });
+        }
       }
     },
     DeletarAnimal(id) {
