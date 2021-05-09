@@ -24,6 +24,9 @@ const criar = async (req, res) => {
       ic_bezerro,
     } = req.body;
 
+    //TODO: tratar excessao de body invalido
+    //TODO: escrever testes unitarios cobertura
+
     const animalLote = await AnimalLote.create({
       fk_id_animal,
       fk_id_lote,

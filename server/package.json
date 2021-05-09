@@ -15,7 +15,8 @@
     "express": "^4.17.1",
     "joi": "^14.3.1",
     "mysql": "^2.18.1",
-    "mysql2": "^2.1.0",
-    "sequelize": "^5.21.6"
+    "mysql2": "^2.2.5",
+    "sequelize": "^5.22.4",
+    "sequelize-auto": "^0.8.2"
   }
 }

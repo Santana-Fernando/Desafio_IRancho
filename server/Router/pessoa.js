@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
-const pessoa = require("../Services/pessoas");
+const SevicosDeUsuario = require("../Services/pessoas");
+const servicosDeUsuario = new SevicosDeUsuario
 
-router.get("/list", pessoa.listar);
-router.post("/create", pessoa.criar);
-router.put("/put/:id", pessoa.atualizar);
-router.delete("/delete/:id", pessoa.deletar);
+router.get("/list", servicosDeUsuario.listarTodosOsUsuarios);
+router.post("/create", servicosDeUsuario.cadastrarNovoUsuario);
+router.put("/put/:id", servicosDeUsuario.atualizarDadosDaUsuario);
+router.delete("/delete/:id", servicosDeUsuario.excluirUsuario);
 
 module.exports = router;
